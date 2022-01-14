@@ -121,8 +121,19 @@
                 <div class="col-12">
                         <div class="card">
                             <div class="card-body">
-                                <h4 class="card-title">Responsive Table </h4>
-                                <h6 class="card-subtitle">Create responsive tables by wrapping any <code>.table</code> in <code>.table-responsive </code></h6>
+								{{FormShow}}
+                                <div class="d-flex justify-content-between">
+									<div>
+<h4 class="card-title">ລາຍການສະຕ໋ອກສິນຄ້າ </h4>
+									</div>
+									
+									<div>
+										<button type="button" v-if="FormShow" class="btn waves-effect waves-light btn-success me-2">ບັນທຶກ</button>
+										<button type="button" v-if="FormShow" @click="Cancel()" class="btn waves-effect waves-light btn-danger me-2">ຍົກເລີກ</button>
+										<button type="button" v-if="!FormShow" @click="AddNew()" class="btn waves-effect waves-light btn-info">ເພີ່ມໃໝ່</button>
+									</div>
+								</div>
+                               
                                 <div class="table-responsive">
                                     <table class="table">
                                         <thead>
@@ -192,7 +203,7 @@ export default {
 
     data() {
         return {
-            
+            FormShow: false,
         };
     },
 
@@ -201,6 +212,12 @@ export default {
     },
 
     methods: {
+		AddNew(){
+			this.FormShow = true
+		},
+		Cancel(){
+			this.FormShow = false
+		}
         
     },
 };

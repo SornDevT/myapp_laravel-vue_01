@@ -19529,10 +19529,19 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: 'MyappHome',
   data: function data() {
-    return {};
+    return {
+      FormShow: false
+    };
   },
   mounted: function mounted() {},
-  methods: {}
+  methods: {
+    AddNew: function AddNew() {
+      this.FormShow = true;
+    },
+    Cancel: function Cancel() {
+      this.FormShow = false;
+    }
+  }
 });
 
 /***/ }),
@@ -20452,11 +20461,51 @@ var _hoisted_3 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_4 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"col-12\"><div class=\"card\"><div class=\"card-body\"><h4 class=\"card-title\">Responsive Table </h4><h6 class=\"card-subtitle\">Create responsive tables by wrapping any <code>.table</code> in <code>.table-responsive </code></h6><div class=\"table-responsive\"><table class=\"table\"><thead><tr><th>Invoice</th><th>User</th><th>Date</th><th>Amount</th><th>Status</th><th>Country</th></tr></thead><tbody><tr><td><a href=\"javascript:void(0)\">Order #26589</a></td><td>Herman Beck</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 16, 2017</span></td><td>$45.00</td><td><div class=\"label label-table label-success\">Paid</div></td><td>EN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #58746</a></td><td>Mary Adams</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 12, 2017</span></td><td>$245.30</td><td><div class=\"label label-table label-danger\">Shipped</div></td><td>CN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #98458</a></td><td>Caleb Richards</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> May 18, 2017</span></td><td>$38.00</td><td><div class=\"label label-table label-info\">Shipped</div></td><td>AU</td></tr><tr><td><a href=\"javascript:void(0)\">Order #32658</a></td><td>June Lane</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Apr 28, 2017</span></td><td>$77.99</td><td><div class=\"label label-table label-success\">Paid</div></td><td>FR</td></tr></tbody></table></div></div></div></div>", 1);
+var _hoisted_4 = {
+  "class": "col-12"
+};
+var _hoisted_5 = {
+  "class": "card"
+};
+var _hoisted_6 = {
+  "class": "card-body"
+};
+var _hoisted_7 = {
+  "class": "d-flex justify-content-between"
+};
 
-var _hoisted_5 = [_hoisted_2, _hoisted_3, _hoisted_4];
+var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
+  "class": "card-title"
+}, "ລາຍການສະຕ໋ອກສິນຄ້າ ")], -1
+/* HOISTED */
+);
+
+var _hoisted_9 = {
+  key: 0,
+  type: "button",
+  "class": "btn waves-effect waves-light btn-success me-2"
+};
+
+var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th>Invoice</th><th>User</th><th>Date</th><th>Amount</th><th>Status</th><th>Country</th></tr></thead><tbody><tr><td><a href=\"javascript:void(0)\">Order #26589</a></td><td>Herman Beck</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 16, 2017</span></td><td>$45.00</td><td><div class=\"label label-table label-success\">Paid</div></td><td>EN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #58746</a></td><td>Mary Adams</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 12, 2017</span></td><td>$245.30</td><td><div class=\"label label-table label-danger\">Shipped</div></td><td>CN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #98458</a></td><td>Caleb Richards</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> May 18, 2017</span></td><td>$38.00</td><td><div class=\"label label-table label-info\">Shipped</div></td><td>AU</td></tr><tr><td><a href=\"javascript:void(0)\">Order #32658</a></td><td>June Lane</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Apr 28, 2017</span></td><td>$77.99</td><td><div class=\"label label-table label-success\">Paid</div></td><td>FR</td></tr></tbody></table></div>", 1);
+
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, _hoisted_5);
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_hoisted_2, _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.FormShow) + " ", 1
+  /* TEXT */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_9, "ບັນທຶກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
+    type: "button",
+    onClick: _cache[0] || (_cache[0] = function ($event) {
+      return $options.Cancel();
+    }),
+    "class": "btn waves-effect waves-light btn-danger me-2"
+  }, "ຍົກເລີກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 2,
+    type: "button",
+    onClick: _cache[1] || (_cache[1] = function ($event) {
+      return $options.AddNew();
+    }),
+    "class": "btn waves-effect waves-light btn-info"
+  }, "ເພີ່ມໃໝ່")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), _hoisted_10])])])]);
 }
 
 /***/ }),

@@ -19530,7 +19530,38 @@ __webpack_require__.r(__webpack_exports__);
   name: 'MyappHome',
   data: function data() {
     return {
-      FormShow: false
+      FormData: [{
+        "id": 795,
+        "name": "ເກີບຜ້າໃບ",
+        "amount": 12,
+        "price_buy": 12000,
+        "price_sell": 18000
+      }, {
+        "id": 612,
+        "name": "ສະບູ",
+        "amount": 2,
+        "price_buy": 5000,
+        "price_sell": 8000
+      }, {
+        "id": 548,
+        "name": "ຢາສະຜົນ",
+        "amount": 14,
+        "price_buy": 13000,
+        "price_sell": 18000
+      }],
+      FormShow: false,
+      FormType: true,
+      // formType = ture (ເພີ່ມຂໍ້ມູນໃໝ່), formType = false (ອັບເດດຂໍ້ມູນ)
+      FormID: '',
+      urllocaltion: window.location.origin,
+      imagePreview: window.location.origin + "/assets/images/add_images.png",
+      FormProduct: {
+        name: '',
+        amount: '',
+        price_buy: '',
+        price_sell: ''
+      },
+      ProductName: ''
     };
   },
   mounted: function mounted() {},
@@ -19540,6 +19571,65 @@ __webpack_require__.r(__webpack_exports__);
     },
     Cancel: function Cancel() {
       this.FormShow = false;
+    },
+    SaveForm: function SaveForm() {
+      var _this = this;
+
+      if (this.FormType) {
+        //console.log(this.FormProduct);
+        this.FormData.push({
+          id: Math.floor(Math.random() * 1000),
+          name: this.FormProduct.name,
+          amount: this.FormProduct.amount,
+          price_buy: this.FormProduct.price_buy,
+          price_sell: this.FormProduct.price_sell
+        });
+      } else {
+        console.log('ມີການອັບເດດ ID: ' + this.FormID);
+        this.FormData.find(function (i) {
+          return i.id == _this.FormID;
+        }).name = this.FormProduct.name;
+        this.FormData.find(function (i) {
+          return i.id == _this.FormID;
+        }).amount = this.FormProduct.amount;
+        this.FormData.find(function (i) {
+          return i.id == _this.FormID;
+        }).price_buy = this.FormProduct.price_buy;
+        this.FormData.find(function (i) {
+          return i.id == _this.FormID;
+        }).price_sell = this.FormProduct.price_sell;
+      }
+
+      this.FormProduct.name = '';
+      this.FormProduct.amount = '';
+      this.FormProduct.price_buy = '';
+      this.FormProduct.price_sell = '';
+      this.FormShow = false;
+      this.FormType = true;
+    },
+    EditPro: function EditPro(id) {
+      //console.log(id)
+      var item = this.FormData.find(function (i) {
+        return i.id == id;
+      }); //console.log(item)
+
+      this.FormShow = true;
+      this.FormProduct.name = item.name;
+      this.FormProduct.amount = item.amount;
+      this.FormProduct.price_buy = item.price_buy;
+      this.FormProduct.price_sell = item.price_sell; // ປ່ຽນສະຖານະ ຟອມໃຫ້ເປັນການອັບເດດ
+
+      this.FormType = false;
+      this.FormID = id;
+    },
+    DelPro: function DelPro(id) {
+      //ແບບເຕັມ
+      //let index = this.FormData.map((i)=>i.id).indexOf(id)
+      //this.FormData.splice(index,1)
+      // ແບບຫຍໍ້
+      this.FormData.splice(this.FormData.map(function (i) {
+        return i.id;
+      }).indexOf(id), 1);
     }
   }
 });
@@ -20480,32 +20570,219 @@ var _hoisted_8 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementV
 /* HOISTED */
 );
 
-var _hoisted_9 = {
+var _hoisted_9 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("hr", null, null, -1
+/* HOISTED */
+);
+
+var _hoisted_10 = {
   key: 0,
-  type: "button",
-  "class": "btn waves-effect waves-light btn-success me-2"
+  "class": "row"
+};
+var _hoisted_11 = {
+  "class": "col-md-3"
+};
+var _hoisted_12 = ["src"];
+
+var _hoisted_13 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+  type: "file",
+  "class": "form-control"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_14 = {
+  "class": "col-md-9"
+};
+var _hoisted_15 = {
+  "class": "form-group"
 };
 
-var _hoisted_10 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createStaticVNode)("<div class=\"table-responsive\"><table class=\"table\"><thead><tr><th>Invoice</th><th>User</th><th>Date</th><th>Amount</th><th>Status</th><th>Country</th></tr></thead><tbody><tr><td><a href=\"javascript:void(0)\">Order #26589</a></td><td>Herman Beck</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 16, 2017</span></td><td>$45.00</td><td><div class=\"label label-table label-success\">Paid</div></td><td>EN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #58746</a></td><td>Mary Adams</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Oct 12, 2017</span></td><td>$245.30</td><td><div class=\"label label-table label-danger\">Shipped</div></td><td>CN</td></tr><tr><td><a href=\"javascript:void(0)\">Order #98458</a></td><td>Caleb Richards</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> May 18, 2017</span></td><td>$38.00</td><td><div class=\"label label-table label-info\">Shipped</div></td><td>AU</td></tr><tr><td><a href=\"javascript:void(0)\">Order #32658</a></td><td>June Lane</td><td><span class=\"text-muted\"><i class=\"fa fa-clock-o\"></i> Apr 28, 2017</span></td><td>$77.99</td><td><div class=\"label label-table label-success\">Paid</div></td><td>FR</td></tr></tbody></table></div>", 1);
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "produc-name",
+  "class": "form-label"
+}, "ຊື່ສິນຄ້າ", -1
+/* HOISTED */
+);
 
+var _hoisted_17 = {
+  "class": "form-group"
+};
+
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "produc-amount",
+  "class": "form-label"
+}, "ຈຳນວນ", -1
+/* HOISTED */
+);
+
+var _hoisted_19 = {
+  "class": "row"
+};
+var _hoisted_20 = {
+  "class": "col-md-6"
+};
+var _hoisted_21 = {
+  "class": "form-group"
+};
+
+var _hoisted_22 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "price-buy",
+  "class": "form-label"
+}, "ລາຄາຊື້", -1
+/* HOISTED */
+);
+
+var _hoisted_23 = {
+  "class": "col-md-6"
+};
+var _hoisted_24 = {
+  "class": "form-group"
+};
+
+var _hoisted_25 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  "for": "price-sell",
+  "class": "form-label"
+}, "ລາຄາຂາຍ", -1
+/* HOISTED */
+);
+
+var _hoisted_26 = {
+  key: 1,
+  "class": "table-responsive"
+};
+var _hoisted_27 = {
+  "class": "table"
+};
+
+var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "#"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຊື່ສິນຄ້າ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈຳນວນ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ລາຄາຊື້"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈັດການ")])], -1
+/* HOISTED */
+);
+
+var _hoisted_29 = {
+  width: "30"
+};
+var _hoisted_30 = ["onClick"];
+
+var _hoisted_31 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ti-pencil"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_32 = [_hoisted_31];
+var _hoisted_33 = ["onClick"];
+
+var _hoisted_34 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+  "class": "ti-trash"
+}, null, -1
+/* HOISTED */
+);
+
+var _hoisted_35 = [_hoisted_34];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [_hoisted_2, _hoisted_3, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)((0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.FormShow) + " ", 1
   /* TEXT */
-  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_9, "ບັນທຶກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 1,
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_7, [_hoisted_8, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 0,
     type: "button",
     onClick: _cache[0] || (_cache[0] = function ($event) {
+      return $options.SaveForm();
+    }),
+    "class": "btn waves-effect waves-light btn-success me-2"
+  }, "ບັນທຶກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
+    type: "button",
+    onClick: _cache[1] || (_cache[1] = function ($event) {
       return $options.Cancel();
     }),
     "class": "btn waves-effect waves-light btn-danger me-2"
   }, "ຍົກເລີກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 2,
     type: "button",
-    onClick: _cache[1] || (_cache[1] = function ($event) {
+    onClick: _cache[2] || (_cache[2] = function ($event) {
       return $options.AddNew();
     }),
     "class": "btn waves-effect waves-light btn-info"
-  }, "ເພີ່ມໃໝ່")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), _hoisted_10])])])]);
+  }, "ເພີ່ມໃໝ່")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.FormData) + " ", 1
+  /* TEXT */
+  ), _hoisted_9, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createTextVNode)(" ສະຖານະຟອມ: " + (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($data.FormType) + " ", 1
+  /* TEXT */
+  ), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("img", {
+    src: $data.imagePreview,
+    alt: ""
+  }, null, 8
+  /* PROPS */
+  , _hoisted_12), _hoisted_13]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [_hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "text",
+    "class": "form-control",
+    id: "product-name",
+    "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
+      return $data.FormProduct.name = $event;
+    }),
+    placeholder: "ປ້ອນຊື່ສິນຄ້າ..."
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.name]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "number",
+    "class": "form-control",
+    id: "product-amount",
+    "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
+      return $data.FormProduct.amount = $event;
+    }),
+    placeholder: "ຈຳນວນສິນຄ້າ..."
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.amount]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "number",
+    "class": "form-control",
+    id: "price-buy",
+    "onUpdate:modelValue": _cache[5] || (_cache[5] = function ($event) {
+      return $data.FormProduct.price_buy = $event;
+    }),
+    placeholder: "ລາຄາຊື້..."
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.price_buy]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [_hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "number",
+    "class": "form-control",
+    id: "price-sell",
+    "onUpdate:modelValue": _cache[6] || (_cache[6] = function ($event) {
+      return $data.FormProduct.price_sell = $event;
+    }),
+    placeholder: "ລາຄາຂາຍ..."
+  }, null, 512
+  /* NEED_PATCH */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.price_sell]])])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_27, [_hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.FormData, function (list) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
+      key: list.id
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.id), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.name), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.amount), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.price_buy), 1
+    /* TEXT */
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      type: "button",
+      onClick: function onClick($event) {
+        return $options.EditPro(list.id);
+      },
+      "class": "btn btn-info btn-circle text-white me-2"
+    }, _hoisted_32, 8
+    /* PROPS */
+    , _hoisted_30), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+      type: "button",
+      onClick: function onClick($event) {
+        return $options.DelPro(list.id);
+      },
+      "class": "btn btn-danger btn-circle text-white"
+    }, _hoisted_35, 8
+    /* PROPS */
+    , _hoisted_33)])]);
+  }), 128
+  /* KEYED_FRAGMENT */
+  ))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])]);
 }
 
 /***/ }),

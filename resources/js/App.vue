@@ -1,5 +1,4 @@
 <template>
-
     <div id="main-wrapper">
         <header class="topbar" style="background: #4f5467;">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">

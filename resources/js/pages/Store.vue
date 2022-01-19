@@ -128,7 +128,7 @@
 									</div>
 									
 									<div>
-										<button type="button" v-if="FormShow" @click="SaveForm()" :class="checkForm"  class="btn waves-effect waves-light btn-success me-2">ບັນທຶກ</button>
+										<button type="button" v-if="FormShow" @click="CheckFormAdd()"   class="btn waves-effect waves-light btn-success me-2">ບັນທຶກ</button>
 										<button type="button" v-if="FormShow" @click="Cancel()" class="btn waves-effect waves-light btn-danger me-2">ຍົກເລີກ</button>
 										<button type="button" v-if="!FormShow" @click="AddNew()" class="btn waves-effect waves-light btn-info">ເພີ່ມໃໝ່</button>
 									</div>
@@ -144,25 +144,25 @@
 									</div>
 									<div class="col-md-9"> 
 										
-										<!-- <div class="form-group">
+										<div class="form-group" :class="hasDangerName">
 												<label for="produc-name" class="form-label">ຊື່ສິນຄ້າ</label>
-												<input type="text" class="form-control" id="product-name" v-model="FormProduct.name"  placeholder="ປ້ອນຊື່ສິນຄ້າ...">
+												<input type="text" class="form-control" :class="inputDangerName" id="product-name" v-model="FormProduct.name"  placeholder="ປ້ອນຊື່ສິນຄ້າ...">
 												
-                                    	</div> -->
+                                    	</div>
 
-										<div class="form-group mt-5 row">
+										<!-- <div class="form-group mt-5 row">
 											<label for="produc-name" class="col-2 col-form-label">ຊື່ສິນຄ້າ</label>
 											<div class="col-10">
 												<input class="form-control" type="text" v-model="FormProduct.name"  placeholder="ປ້ອນຊື່ສິນຄ້າ..." id="product-name">
 											</div>
-										</div>
-										<!-- <div class="form-group">
-												<label for="produc-amount" class="form-label">ຈຳນວນ</label>
-												<input type="number" class="form-control" id="product-amount"  v-model="FormProduct.amount" placeholder="ຈຳນວນສິນຄ້າ...">
+										</div> -->
+										<div class="form-group" :class="hasDangerAmount">
+												<label for="produc-amount" class="form-label" >ຈຳນວນ</label>
+												<input type="number" class="form-control" id="product-amount" :class="inputDangerAmount"  v-model="FormProduct.amount" placeholder="ຈຳນວນສິນຄ້າ...">
 												
-                                    	</div> -->
+                                    	</div>
 										
-										<div class="form-group mt-5 row">
+										<!-- <div class="form-group mt-5 row">
 											<label for="produc-amount" class="col-2 col-form-label">ຈຳນວນ</label>
 											<div class="col-10">
 												<cleave 
@@ -173,20 +173,20 @@
 												id="produc-amount"/>
 
 											</div>
-										</div>
+										</div> -->
 
 										<div class="row">
 												<div class="col-md-6">
-														<div class="form-group">
+														<div class="form-group" :class="hasDangerPriceBuy">
 																<label for="price-buy" class="form-label">ລາຄາຊື້</label>
-																<cleave type="text" class="form-control" id="price-buy" :options="option"  v-model="FormProduct.price_buy" placeholder="ລາຄາຊື້..."/>
+																<cleave type="text" class="form-control" :class="inputDangerPriceBuy" id="price-buy" :options="option"  v-model="FormProduct.price_buy" placeholder="ລາຄາຊື້..."/>
 																
 														</div>
 												</div>
 												<div class="col-md-6">
-													<div class="form-group">
-															<label for="price-sell" class="form-label">ລາຄາຂາຍ</label>
-															<cleave type="text" class="form-control" id="price-sell" :options="option"  v-model="FormProduct.price_sell"  placeholder="ລາຄາຂາຍ..."/>
+													<div class="form-group" :class="hasDangerPriceSell">
+															<label for="price-sell" class="form-label" >ລາຄາຂາຍ</label>
+															<cleave type="text" class="form-control" :class="inputDangerPriceSell" id="price-sell" :options="option"  v-model="FormProduct.price_sell"  placeholder="ລາຄາຂາຍ..."/>
 															
 													</div>
 												</div>
@@ -258,7 +258,15 @@ export default {
 				numeralDecimalScale: 2,
 				numeralDecimalMark: '.',
 				delimiter: ','
-			}
+			},
+			hasDangerName:'',
+			inputDangerName:'',
+			hasDangerAmount:'',
+			inputDangerAmount:'',
+			hasDangerPriceBuy:'',
+			inputDangerPriceBuy:'',
+			hasDangerPriceSell:'',
+			inputDangerPriceSell:'',
         };
     },
 
@@ -279,6 +287,14 @@ export default {
 	},
 
     methods: {
+		GetAllStore(){
+
+			axios.get(`/api/store`).then((response) => {
+                        this.FormData = response.data;
+                    }).catch((error) => {
+                        console.log(error);
+                    })
+		},
 		AddNew(){
 			this.FormShow = true
 		},
@@ -286,8 +302,6 @@ export default {
 			this.FormShow = false
 		},
 		SaveForm(){
-
-
 
 			if(this.FormType){
 				//console.log(this.FormProduct);
@@ -299,36 +313,61 @@ export default {
 				// 	price_sell: this.FormProduct.price_sell
 				// });
 
-		//this.$axios.get("/sanctum/csrf-cookie").then((response) => {
-            let formData = new FormData();
-            formData.append('name', this.FormProduct.name);
-            formData.append('amount', this.FormProduct.amount);
-            formData.append('price_buy', this.FormProduct.price_buy);
-            formData.append('price_sell', this.FormProduct.price_sell);
-            // formData.append('file', this.imagesPro);
-          axios.post("/api/store/add", formData ,{headers:{ "Content-Type": "multipart/form-data"}})
-            .then((response) => {
-					if (response.data.success) {
-							console.log('ບັນທຶກ ຂໍ້ມູນສຳເລັດ');
-					} else {
-						console.log(response.data.message);
-					}
-            })
-            .catch((error) => {
-              console.log(error);
-            });
-       // });
+				//this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+					let formData = new FormData();
+					formData.append('name', this.FormProduct.name);
+					formData.append('amount', this.FormProduct.amount);
+					formData.append('price_buy', this.FormProduct.price_buy);
+					formData.append('price_sell', this.FormProduct.price_sell);
+					// formData.append('file', this.imagesPro);
+				axios.post("/api/store/add", formData ,{headers:{ "Content-Type": "multipart/form-data"}})
+					.then((response) => {
+						this.GetAllStore();
+						
+							// if (response.data.success) {
+							// 		console.log('ບັນທຶກ ຂໍ້ມູນສຳເລັດ');
+							// } else {
+							// 	console.log(response.data.message);
+							// }
+					})
+					.catch((error) => {
+					console.log(error);
+					});
+			// });
 
 
 
 			} else {
-				console.log('ມີການອັບເດດ ID: '+this.FormID)
+				///console.log('ມີການອັບເດດ ID: '+this.FormID)
+				// this.FormData.find((i)=>i.id == this.FormID).name = this.FormProduct.name
+				// this.FormData.find((i)=>i.id == this.FormID).amount = this.FormProduct.amount
+				// this.FormData.find((i)=>i.id == this.FormID).price_buy = this.FormProduct.price_buy
+				// this.FormData.find((i)=>i.id == this.FormID).price_sell = this.FormProduct.price_sell
 
-				this.FormData.find((i)=>i.id == this.FormID).name = this.FormProduct.name
-				this.FormData.find((i)=>i.id == this.FormID).amount = this.FormProduct.amount
-				this.FormData.find((i)=>i.id == this.FormID).price_buy = this.FormProduct.price_buy
-				this.FormData.find((i)=>i.id == this.FormID).price_sell = this.FormProduct.price_sell
+
+					let formData = new FormData();
+					formData.append('name', this.FormProduct.name);
+					formData.append('amount', this.FormProduct.amount);
+					formData.append('price_buy', this.FormProduct.price_buy);
+					formData.append('price_sell', this.FormProduct.price_sell);
+
+				axios.post(`/api/store/update/${this.FormID}`, formData ,{headers:{ "Content-Type": "multipart/form-data"}})
+					.then((response) => {
+						
+						this.GetAllStore();
+
+					// if (response.data.success) {
+					// 	this.GetAllStore();
+					// } else {
+					// 	console.log(response.data.message);
+					// }
+					})
+					.catch((error) => {
+					console.log(error);
+					});
 			}
+			
+			//console.log('ບັນທຶກແລ້ວ')
 
 			this.FormProduct.name = ''
 			this.FormProduct.amount = ''
@@ -340,13 +379,26 @@ export default {
 		},
 		EditPro(id){
 			//console.log(id)
-			let item = this.FormData.find((i)=>i.id == id)
+			//let item = this.FormData.find((i)=>i.id == id)
 			//console.log(item)
+
+
+			axios.get(`/api/store/edit/${id}`)
+                    .then((response) => {
+						console.log(response)
+
+						this.FormProduct.name = response.data.name
+						this.FormProduct.amount = response.data.amount
+						this.FormProduct.price_buy = response.data.price_buy
+						this.FormProduct.price_sell = response.data.price_sell
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+
+
 			this.FormShow = true
-			this.FormProduct.name = item.name
-			this.FormProduct.amount = item.amount
-			this.FormProduct.price_buy = item.price_buy
-			this.FormProduct.price_sell = item.price_sell
+			
 			
 			// ປ່ຽນສະຖານະ ຟອມໃຫ້ເປັນການອັບເດດ
 			this.FormType = false
@@ -371,7 +423,20 @@ export default {
 				if(result.isConfirmed){
 
 					// ແບບຫຍໍ້
-					this.FormData.splice(this.FormData.map((i)=>i.id).indexOf(id),1)
+					//this.FormData.splice(this.FormData.map((i)=>i.id).indexOf(id),1)
+
+					
+					axios.delete(`/api/store/delete/${id}`)
+						.then((response) => {
+							//this.FormData = response.data;
+							//if (response.data.success) {
+								this.GetAllStore();
+								//}
+						})
+						.catch((error) => {
+							console.log(error);
+						});
+			
 
 					this.$swal.fire(
 						'ລະບົບໄດ້ຖຶກລຶບແລ້ວ',
@@ -388,8 +453,54 @@ export default {
 			let val = (value / 1).toFixed(0).replace(",", ".");
 			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 		},
+		CheckFormAdd()
+		{
+			if(this.FormProduct.name==''){
+				this.hasDangerName = 'has-danger'
+				this.inputDangerName = 'form-control-danger'
+			} else {
+				this.hasDangerName = ''
+				this.inputDangerName = ''
+			}
+
+			if(this.FormProduct.amount==''){
+				this.hasDangerAmount = 'has-danger'
+				this.inputDangerAmount = 'form-control-danger'
+			} else {
+				this.hasDangerAmount = ''
+				this.inputDangerAmount = ''
+			}
+
+			if(this.FormProduct.price_buy==''){
+				this.hasDangerPriceBuy = 'has-danger'
+				this.inputDangerPriceBuy = 'form-control-danger'
+			} else {
+				this.hasDangerPriceBuy = ''
+				this.inputDangerPriceBuy = ''
+			}
+			
+
+			if(this.FormProduct.price_sell==''){
+				this.hasDangerPriceSell = 'has-danger'
+				this.inputDangerPriceSell = 'form-control-danger'
+			} else {
+				this.hasDangerPriceSell = ''
+				this.inputDangerPriceSell = ''
+			}
+
+			if(this.FormProduct.name != "" && this.FormProduct.amount != "" && this.FormProduct.price_buy != "" && this.FormProduct.price_sell != "" )
+			{
+				this.SaveForm()
+			} 
+
+			
+		}
         
     },
+	created(){
+
+		this.GetAllStore();
+	}
 };
 </script>
 

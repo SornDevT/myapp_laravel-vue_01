@@ -11,6 +11,16 @@ class StoreController extends Controller
     //
     public function index(){
 
+        $store = Store::orderBy('created_at', 'desc')->get();
+        return $store;
+
+
+        //->where('name','LIKE',"%{$search}%")
+        //->paginate(10)
+       // ->toArray();
+        
+        //return array_reverse($store);
+        
     }
 
 
@@ -45,14 +55,28 @@ class StoreController extends Controller
 
     public function edit($id){
 
+        $store = Store::find($id);
+        return response()->json($store);
 
     }
 
     public function update($id, Request $request){
-      
+
+        $store = Store::find($id);
+        $store->update([
+                    'name' => $request->name,
+                    //'images' => $generated_new_name,
+                    'amount' => $request->amount,
+                    'price_buy' => $request->price_buy,
+                    'price_sell' => $request->price_sell
+                ]);
+
     }
 
     public function delete($id){
+
+        $store = Store::find($id);
+        $store->delete();
 
 
     }

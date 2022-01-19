@@ -19554,7 +19554,15 @@ __webpack_require__.r(__webpack_exports__);
         numeralDecimalScale: 2,
         numeralDecimalMark: '.',
         delimiter: ','
-      }
+      },
+      hasDangerName: '',
+      inputDangerName: '',
+      hasDangerAmount: '',
+      inputDangerAmount: '',
+      hasDangerPriceBuy: '',
+      inputDangerPriceBuy: '',
+      hasDangerPriceSell: '',
+      inputDangerPriceSell: ''
     };
   },
   mounted: function mounted() {},
@@ -19568,6 +19576,15 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   methods: {
+    GetAllStore: function GetAllStore() {
+      var _this = this;
+
+      axios.get("/api/store").then(function (response) {
+        _this.FormData = response.data;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+    },
     AddNew: function AddNew() {
       this.FormShow = true;
     },
@@ -19575,7 +19592,7 @@ __webpack_require__.r(__webpack_exports__);
       this.FormShow = false;
     },
     SaveForm: function SaveForm() {
-      var _this = this;
+      var _this2 = this;
 
       if (this.FormType) {
         //console.log(this.FormProduct);
@@ -19598,29 +19615,47 @@ __webpack_require__.r(__webpack_exports__);
             "Content-Type": "multipart/form-data"
           }
         }).then(function (response) {
-          if (response.data.success) {
-            console.log('ບັນທຶກ ຂໍ້ມູນສຳເລັດ');
-          } else {
-            console.log(response.data.message);
-          }
+          _this2.GetAllStore(); // if (response.data.success) {
+          // 		console.log('ບັນທຶກ ຂໍ້ມູນສຳເລັດ');
+          // } else {
+          // 	console.log(response.data.message);
+          // }
+
         })["catch"](function (error) {
           console.log(error);
         }); // });
       } else {
-        console.log('ມີການອັບເດດ ID: ' + this.FormID);
-        this.FormData.find(function (i) {
-          return i.id == _this.FormID;
-        }).name = this.FormProduct.name;
-        this.FormData.find(function (i) {
-          return i.id == _this.FormID;
-        }).amount = this.FormProduct.amount;
-        this.FormData.find(function (i) {
-          return i.id == _this.FormID;
-        }).price_buy = this.FormProduct.price_buy;
-        this.FormData.find(function (i) {
-          return i.id == _this.FormID;
-        }).price_sell = this.FormProduct.price_sell;
-      }
+        ///console.log('ມີການອັບເດດ ID: '+this.FormID)
+        // this.FormData.find((i)=>i.id == this.FormID).name = this.FormProduct.name
+        // this.FormData.find((i)=>i.id == this.FormID).amount = this.FormProduct.amount
+        // this.FormData.find((i)=>i.id == this.FormID).price_buy = this.FormProduct.price_buy
+        // this.FormData.find((i)=>i.id == this.FormID).price_sell = this.FormProduct.price_sell
+        var _formData = new FormData();
+
+        _formData.append('name', this.FormProduct.name);
+
+        _formData.append('amount', this.FormProduct.amount);
+
+        _formData.append('price_buy', this.FormProduct.price_buy);
+
+        _formData.append('price_sell', this.FormProduct.price_sell);
+
+        axios.post("/api/store/update/".concat(this.FormID), _formData, {
+          headers: {
+            "Content-Type": "multipart/form-data"
+          }
+        }).then(function (response) {
+          _this2.GetAllStore(); // if (response.data.success) {
+          // 	this.GetAllStore();
+          // } else {
+          // 	console.log(response.data.message);
+          // }
+
+        })["catch"](function (error) {
+          console.log(error);
+        });
+      } //console.log('ບັນທຶກແລ້ວ')
+
 
       this.FormProduct.name = '';
       this.FormProduct.amount = '';
@@ -19630,22 +19665,27 @@ __webpack_require__.r(__webpack_exports__);
       this.FormType = true;
     },
     EditPro: function EditPro(id) {
-      //console.log(id)
-      var item = this.FormData.find(function (i) {
-        return i.id == id;
-      }); //console.log(item)
+      var _this3 = this;
 
-      this.FormShow = true;
-      this.FormProduct.name = item.name;
-      this.FormProduct.amount = item.amount;
-      this.FormProduct.price_buy = item.price_buy;
-      this.FormProduct.price_sell = item.price_sell; // ປ່ຽນສະຖານະ ຟອມໃຫ້ເປັນການອັບເດດ
+      //console.log(id)
+      //let item = this.FormData.find((i)=>i.id == id)
+      //console.log(item)
+      axios.get("/api/store/edit/".concat(id)).then(function (response) {
+        console.log(response);
+        _this3.FormProduct.name = response.data.name;
+        _this3.FormProduct.amount = response.data.amount;
+        _this3.FormProduct.price_buy = response.data.price_buy;
+        _this3.FormProduct.price_sell = response.data.price_sell;
+      })["catch"](function (error) {
+        console.log(error);
+      });
+      this.FormShow = true; // ປ່ຽນສະຖານະ ຟອມໃຫ້ເປັນການອັບເດດ
 
       this.FormType = false;
       this.FormID = id;
     },
     DelPro: function DelPro(id) {
-      var _this2 = this;
+      var _this4 = this;
 
       //ແບບເຕັມ
       //let index = this.FormData.map((i)=>i.id).indexOf(id)
@@ -19662,18 +19702,64 @@ __webpack_require__.r(__webpack_exports__);
       }).then(function (result) {
         if (result.isConfirmed) {
           // ແບບຫຍໍ້
-          _this2.FormData.splice(_this2.FormData.map(function (i) {
-            return i.id;
-          }).indexOf(id), 1);
+          //this.FormData.splice(this.FormData.map((i)=>i.id).indexOf(id),1)
+          axios["delete"]("/api/store/delete/".concat(id)).then(function (response) {
+            //this.FormData = response.data;
+            //if (response.data.success) {
+            _this4.GetAllStore(); //}
 
-          _this2.$swal.fire('ລະບົບໄດ້ຖຶກລຶບແລ້ວ', '', 'info');
+          })["catch"](function (error) {
+            console.log(error);
+          });
+
+          _this4.$swal.fire('ລະບົບໄດ້ຖຶກລຶບແລ້ວ', '', 'info');
         }
       });
     },
     formatPrice: function formatPrice(value) {
       var val = (value / 1).toFixed(0).replace(",", ".");
       return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+    CheckFormAdd: function CheckFormAdd() {
+      if (this.FormProduct.name == '') {
+        this.hasDangerName = 'has-danger';
+        this.inputDangerName = 'form-control-danger';
+      } else {
+        this.hasDangerName = '';
+        this.inputDangerName = '';
+      }
+
+      if (this.FormProduct.amount == '') {
+        this.hasDangerAmount = 'has-danger';
+        this.inputDangerAmount = 'form-control-danger';
+      } else {
+        this.hasDangerAmount = '';
+        this.inputDangerAmount = '';
+      }
+
+      if (this.FormProduct.price_buy == '') {
+        this.hasDangerPriceBuy = 'has-danger';
+        this.inputDangerPriceBuy = 'form-control-danger';
+      } else {
+        this.hasDangerPriceBuy = '';
+        this.inputDangerPriceBuy = '';
+      }
+
+      if (this.FormProduct.price_sell == '') {
+        this.hasDangerPriceSell = 'has-danger';
+        this.inputDangerPriceSell = 'form-control-danger';
+      } else {
+        this.hasDangerPriceSell = '';
+        this.inputDangerPriceSell = '';
+      }
+
+      if (this.FormProduct.name != "" && this.FormProduct.amount != "" && this.FormProduct.price_buy != "" && this.FormProduct.price_sell != "") {
+        this.SaveForm();
+      }
     }
+  },
+  created: function created() {
+    this.GetAllStore();
   }
 });
 
@@ -20632,102 +20718,83 @@ var _hoisted_12 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 var _hoisted_13 = {
   "class": "col-md-9"
 };
-var _hoisted_14 = {
-  "class": "form-group mt-5 row"
-};
 
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_14 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "produc-name",
-  "class": "col-2 col-form-label"
+  "class": "form-label"
 }, "ຊື່ສິນຄ້າ", -1
 /* HOISTED */
 );
 
-var _hoisted_16 = {
-  "class": "col-10"
-};
-var _hoisted_17 = {
-  "class": "form-group mt-5 row"
-};
-
-var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "produc-amount",
-  "class": "col-2 col-form-label"
+  "class": "form-label"
 }, "ຈຳນວນ", -1
 /* HOISTED */
 );
 
-var _hoisted_19 = {
-  "class": "col-10"
-};
-var _hoisted_20 = {
+var _hoisted_16 = {
   "class": "row"
 };
-var _hoisted_21 = {
+var _hoisted_17 = {
   "class": "col-md-6"
 };
-var _hoisted_22 = {
-  "class": "form-group"
-};
 
-var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_18 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "price-buy",
   "class": "form-label"
 }, "ລາຄາຊື້", -1
 /* HOISTED */
 );
 
-var _hoisted_24 = {
+var _hoisted_19 = {
   "class": "col-md-6"
 };
-var _hoisted_25 = {
-  "class": "form-group"
-};
 
-var _hoisted_26 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+var _hoisted_20 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
   "for": "price-sell",
   "class": "form-label"
 }, "ລາຄາຂາຍ", -1
 /* HOISTED */
 );
 
-var _hoisted_27 = {
+var _hoisted_21 = {
   key: 1,
   "class": "table-responsive"
 };
-var _hoisted_28 = {
+var _hoisted_22 = {
   "class": "table"
 };
 
-var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "#"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຊື່ສິນຄ້າ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈຳນວນ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ລາຄາຊື້"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈັດການ")])], -1
+var _hoisted_23 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("thead", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tr", null, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "#"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຊື່ສິນຄ້າ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈຳນວນ"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ລາຄາຊື້"), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("th", null, "ຈັດການ")])], -1
 /* HOISTED */
 );
 
-var _hoisted_30 = {
+var _hoisted_24 = {
   width: "30"
 };
-var _hoisted_31 = {
+var _hoisted_25 = {
   width: "120",
   "class": "text-center"
 };
-var _hoisted_32 = ["onClick"];
+var _hoisted_26 = ["onClick"];
 
-var _hoisted_33 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_27 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ti-pencil"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_34 = [_hoisted_33];
-var _hoisted_35 = ["onClick"];
+var _hoisted_28 = [_hoisted_27];
+var _hoisted_29 = ["onClick"];
 
-var _hoisted_36 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
+var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("i", {
   "class": "ti-trash"
 }, null, -1
 /* HOISTED */
 );
 
-var _hoisted_37 = [_hoisted_36];
+var _hoisted_31 = [_hoisted_30];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _component_cleave = (0,vue__WEBPACK_IMPORTED_MODULE_0__.resolveComponent)("cleave");
 
@@ -20735,12 +20802,10 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     key: 0,
     type: "button",
     onClick: _cache[0] || (_cache[0] = function ($event) {
-      return $options.SaveForm();
+      return $options.CheckFormAdd();
     }),
-    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)([$options.checkForm, "btn waves-effect waves-light btn-success me-2"])
-  }, "ບັນທຶກ", 2
-  /* CLASS */
-  )) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    "class": "btn waves-effect waves-light btn-success me-2"
+  }, "ບັນທຶກ")) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
     key: 1,
     type: "button",
     onClick: _cache[1] || (_cache[1] = function ($event) {
@@ -20759,30 +20824,39 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     alt: ""
   }, null, 8
   /* PROPS */
-  , _hoisted_11), _hoisted_12]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<label for=\"produc-name\" class=\"form-label\">ຊື່ສິນຄ້າ</label>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"text\" class=\"form-control\" id=\"product-name\" v-model=\"FormProduct.name\"  placeholder=\"ປ້ອນຊື່ສິນຄ້າ...\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t\r\n                                    \t</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    "class": "form-control",
+  , _hoisted_11), _hoisted_12]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_13, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-group", $data.hasDangerName])
+  }, [_hoisted_14, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     type: "text",
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-control", $data.inputDangerName]),
+    id: "product-name",
     "onUpdate:modelValue": _cache[3] || (_cache[3] = function ($event) {
       return $data.FormProduct.name = $event;
     }),
-    placeholder: "ປ້ອນຊື່ສິນຄ້າ...",
-    id: "product-name"
-  }, null, 512
-  /* NEED_PATCH */
-  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.name]])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<label for=\"produc-amount\" class=\"form-label\">ຈຳນວນ</label>\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input type=\"number\" class=\"form-control\" id=\"product-amount\"  v-model=\"FormProduct.amount\" placeholder=\"ຈຳນວນສິນຄ້າ...\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t\r\n                                    \t</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_cleave, {
-    "class": "form-control",
-    options: $data.option,
-    modelValue: $data.FormProduct.amount,
+    placeholder: "ປ້ອນຊື່ສິນຄ້າ..."
+  }, null, 2
+  /* CLASS */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.name]])], 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group mt-5 row\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label for=\"produc-name\" class=\"col-2 col-form-label\">ຊື່ສິນຄ້າ</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-10\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<input class=\"form-control\" type=\"text\" v-model=\"FormProduct.name\"  placeholder=\"ປ້ອນຊື່ສິນຄ້າ...\" id=\"product-name\">\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-group", $data.hasDangerAmount])
+  }, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    type: "number",
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-control", $data.inputDangerAmount]),
+    id: "product-amount",
     "onUpdate:modelValue": _cache[4] || (_cache[4] = function ($event) {
       return $data.FormProduct.amount = $event;
     }),
-    placeholder: "ຈຳນວນສິນຄ້າ...",
-    id: "produc-amount"
-  }, null, 8
-  /* PROPS */
-  , ["options", "modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_20, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_cleave, {
+    placeholder: "ຈຳນວນສິນຄ້າ..."
+  }, null, 2
+  /* CLASS */
+  ), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $data.FormProduct.amount]])], 2
+  /* CLASS */
+  ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"form-group mt-5 row\">\r\n\t\t\t\t\t\t\t\t\t\t\t<label for=\"produc-amount\" class=\"col-2 col-form-label\">ຈຳນວນ</label>\r\n\t\t\t\t\t\t\t\t\t\t\t<div class=\"col-10\">\r\n\t\t\t\t\t\t\t\t\t\t\t\t<cleave \r\n\t\t\t\t\t\t\t\t\t\t\t\tclass=\"form-control\" \r\n\t\t\t\t\t\t\t\t\t\t\t\t:options=\"option\" \r\n\t\t\t\t\t\t\t\t\t\t\t\tv-model=\"FormProduct.amount\"  \r\n\t\t\t\t\t\t\t\t\t\t\t\tplaceholder=\"ຈຳນວນສິນຄ້າ...\" \r\n\t\t\t\t\t\t\t\t\t\t\t\tid=\"produc-amount\"/>\r\n\r\n\t\t\t\t\t\t\t\t\t\t\t</div>\r\n\t\t\t\t\t\t\t\t\t\t</div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-group", $data.hasDangerPriceBuy])
+  }, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_cleave, {
     type: "text",
-    "class": "form-control",
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-control", $data.inputDangerPriceBuy]),
     id: "price-buy",
     options: $data.option,
     modelValue: $data.FormProduct.price_buy,
@@ -20792,9 +20866,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     placeholder: "ລາຄາຊື້..."
   }, null, 8
   /* PROPS */
-  , ["options", "modelValue"])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_cleave, {
+  , ["class", "options", "modelValue"])], 2
+  /* CLASS */
+  )]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-group", $data.hasDangerPriceSell])
+  }, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)(_component_cleave, {
     type: "text",
-    "class": "form-control",
+    "class": (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeClass)(["form-control", $data.inputDangerPriceSell]),
     id: "price-sell",
     options: $data.option,
     modelValue: $data.FormProduct.price_sell,
@@ -20804,10 +20882,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     placeholder: "ລາຄາຂາຍ..."
   }, null, 8
   /* PROPS */
-  , ["options", "modelValue"])])])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_28, [_hoisted_29, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.FormData, function (list) {
+  , ["class", "options", "modelValue"])], 2
+  /* CLASS */
+  )])])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), !$data.FormShow ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("table", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("tbody", null, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($data.FormData, function (list) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("tr", {
       key: list.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_30, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.id), 1
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.id), 1
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(list.name), 1
     /* TEXT */
@@ -20815,23 +20895,23 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     /* TEXT */
     ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($options.formatPrice(list.price_buy)), 1
     /* TEXT */
-    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_31, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    ), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("td", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       type: "button",
       onClick: function onClick($event) {
         return $options.EditPro(list.id);
       },
       "class": "btn btn-info btn-circle text-white me-2"
-    }, _hoisted_34, 8
+    }, _hoisted_28, 8
     /* PROPS */
-    , _hoisted_32), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    , _hoisted_26), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
       type: "button",
       onClick: function onClick($event) {
         return $options.DelPro(list.id);
       },
       "class": "btn btn-danger btn-circle text-white"
-    }, _hoisted_37, 8
+    }, _hoisted_31, 8
     /* PROPS */
-    , _hoisted_35)])]);
+    , _hoisted_29)])]);
   }), 128
   /* KEYED_FRAGMENT */
   ))])])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])])])]);

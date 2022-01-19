@@ -21,9 +21,9 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 //Route::group(['prefix' => 'store', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('/', [StoreController::class, 'index']);
+    Route::get('store/', [StoreController::class, 'index']);
     Route::post('store/add', [StoreController::class, 'add']);
-    Route::get('edit/{id}', [StoreController::class, 'edit']);
-    Route::post('update/{id}', [StoreController::class, 'update']);
-    Route::delete('delete/{id}', [StoreController::class, 'delete']);
+    Route::get('store/edit/{id}', [StoreController::class, 'edit']);
+    Route::post('store/update/{id}', [StoreController::class, 'update']);
+    Route::delete('store/delete/{id}', [StoreController::class, 'delete']);
 //});

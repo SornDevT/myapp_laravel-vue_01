@@ -367,8 +367,9 @@ export default {
     created(){
         if(window.Laravel.isLoggedin){
             this.isLoggedIn = true
-            //this.UserName = window.laravel.user.name
+            this.UserName = window.Laravel.user.name
         }
+       // console.log(window.Laravel.user)
     }
 };
 </script>

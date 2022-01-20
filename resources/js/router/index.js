@@ -6,6 +6,7 @@ import Register from "../pages/Register.vue";
 import Report from "../pages/Report.vue";
 import Transection from "../pages/Transection.vue";
 import Pos from "../pages/Pos.vue";
+import Notfound from "../pages/Notfound.vue"
 
 export const routes = [
     {
@@ -24,6 +25,11 @@ export const routes = [
         component: Report,
     },
     {
+        name: "login2",
+        path:"/",
+        component: Login,
+    },
+    {
         name: "login",
         path:"/login",
         component: Login,
@@ -37,7 +43,11 @@ export const routes = [
         name: "pos",
         path:"/pos",
         component: Pos,
-    }
+    },
+    {
+        path: "/:catchAll(.*)",
+        component: Notfound,
+      },
 ];
 
 const router = createRouter({

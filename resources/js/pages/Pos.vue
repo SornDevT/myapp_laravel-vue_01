@@ -1,4 +1,5 @@
 <template>
+<div class="page-wrapper">
     <div class="container-fluid">
         <div class="row page-titles">
             <div class="col-md-5 align-self-center">
@@ -76,6 +77,7 @@
             </div>
         </div>
     </div>
+</div>
 </template>
 
 <script>

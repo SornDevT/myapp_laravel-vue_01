@@ -1,4 +1,5 @@
 <template>
+<div class="page-wrapper">
         <div class="container-fluid">
 
                 <div class="row page-titles">
@@ -225,7 +226,7 @@
                             </div>
                         </div>
                     </div>
-
+		</div>
         </div>
 </template>
 
@@ -500,7 +501,13 @@ export default {
 	created(){
 
 		this.GetAllStore();
-	}
+	},
+	beforeRouteEnter(to, from, next) {
+    if (!window.Laravel.isLoggedin) {
+      window.location.href = "/login";
+    }
+    next();
+  },
 };
 </script>
 

@@ -1,6 +1,6 @@
 <template>
     <div id="main-wrapper">
-        <header class="topbar" style="background: #4f5467;">
+        <header class="topbar" style="background: #4f5467;" v-if="isLoggedIn">
             <nav class="navbar top-navbar navbar-expand-md navbar-dark">
 
                 <div class="navbar-header">
@@ -26,6 +26,7 @@
                                 <input type="text" class="form-control" placeholder="Search & enter">
                             </form>
                         </li>
+                        
                     </ul>
                     <ul class="navbar-nav my-lg-0">
                         <li class="nav-item dropdown">
@@ -224,6 +225,7 @@
                         <!-- End mega menu -->
                         <!-- ============================================================== -->
                         <li class="nav-item right-side-toggle"> <a class="nav-link  waves-effect waves-light" href="javascript:void(0)"><i class="ti-settings"></i></a></li>
+                        <li class="nav-item"> <a class="nav-link  waves-effect waves-light" @click="logout()" href="javascript:void(0)"><i class=" icon-login"></i></a></li>
                     </ul>
                 </div>
             </nav>
@@ -234,7 +236,7 @@
         <!-- ============================================================== -->
         <!-- Left Sidebar - style you can find in sidebar.scss  -->
         <!-- ============================================================== -->
-        <aside class="left-sidebar">
+        <aside class="left-sidebar" v-if="isLoggedIn">
             <!-- Sidebar scroll-->
             <div class="scroll-sidebar">
                 <!-- User Profile-->
@@ -244,7 +246,7 @@
                             <img src="assets/images/users/2.jpg" alt="user-img" class="img-circle">
                         </div>
                         <div class="dropdown">
-                            <a href="javascript:void(0)" class="dropdown-toggle u-dropdown link hide-menu" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Steave Gection
+                            <a href="javascript:void(0)" class="dropdown-toggle u-dropdown link hide-menu" data-bs-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">{{UserName}}
                                 <span class="caret"></span>
                             </a>
                             <div class="dropdown-menu animated flipInY">
@@ -314,13 +316,13 @@
 
         </aside>
 
-        <div class="page-wrapper">
+        
 
             <router-view/>
 
             
-        </div>
-        <footer class="footer">
+        
+        <footer class="footer" v-if="isLoggedIn">
             © 2021 Eliteadmin by themedesigner.in
             <a href="index.htm">WrapPixel</a>
         </footer>
@@ -334,7 +336,8 @@ export default {
 
     data() {
         return {
-            
+            isLoggedIn: false,
+            UserName:'',
         };
     },
 
@@ -343,8 +346,30 @@ export default {
     },
 
     methods: {
+
+         logout() {
+            this.$axios.get('/sanctum/csrf-cookie').then(response => {
+                this.$axios.post('/api/logout')
+                    .then(response => {
+                        if (response.data.success) {
+                            window.location.href = "/"
+                        } else {
+                            console.log(response)
+                        }
+                    })
+                    .catch(function (error) {
+                        console.error(error);
+                    });
+            })
+        }
         
     },
+    created(){
+        if(window.Laravel.isLoggedin){
+            this.isLoggedIn = true
+            //this.UserName = window.laravel.user.name
+        }
+    }
 };
 </script>
 

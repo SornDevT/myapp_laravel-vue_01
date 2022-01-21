@@ -138,10 +138,10 @@
 										<hr> 
 										ສະຖານະຟອມ: {{FormType}} -->
 								<div class="row" v-if="FormShow">
-									<div class="col-md-3">
+									<div class="col-md-3 p-2">
 								
-										<img :src="imagePreview" alt="">
-										<input type="file" class="form-control">
+										<img :src="imagePreview" class="mb-2" style="width:100%" alt="">
+										<input type="file" class="form-control " @change="onSeclected">
 									</div>
 									<div class="col-md-9"> 
 										
@@ -197,7 +197,18 @@
 								</div>
                                
                                 <div class="table-responsive" v-if="!FormShow">
-                                    <table class="table">
+									<div class="row pt-3 pb-3">
+										<div class="col-md-6">
+
+										</div>
+										<div class="col-md-6">
+											<div class="input-group">
+												<input type="text" v-model="SearchProduct" @keyup.enter="GetAllStore()" class="form-control" placeholder="ຄົ້ນຫາ..." >
+											</div>
+										</div>
+									</div>
+									
+                                    <table class="table border color-table purple-table">
                                         <thead>
                                             <tr>
                                                 <th>#</th>
@@ -208,12 +219,12 @@
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr v-for="list in FormData" :key="list.id">
+                                            <tr v-for="list in FormData.data" :key="list.id">
                                                 <td width="30">{{list.id}}</td>
                                                 <td>{{list.name}}</td>
                                                 <td> {{formatPrice(list.amount)}} </td>
                                                 <td>{{formatPrice(list.price_buy)}}</td>
-                                                <td width="120" class="text-center"> 
+                                                <td width="150" class="text-center"> 
 													<button type="button" @click="EditPro(list.id)" class="btn btn-info btn-circle text-white me-2"><i class="ti-pencil"></i> </button> 
 													<button type="button" @click="DelPro(list.id)" class="btn btn-danger btn-circle text-white"><i class="ti-trash"></i> </button>
 													 </td>
@@ -222,6 +233,7 @@
                                            
                                         </tbody>
                                     </table>
+									<pagination :pagination="FormData" @paginate="GetAllStore($event)" :offset="4" />
                                 </div>
                             </div>
                         </div>
@@ -248,6 +260,7 @@ export default {
 				price_buy:'',
 				price_sell:''
 			},
+			imageProduct:'',
 			ProductName:'',
 			option:{
 				//prefix: '$',
@@ -268,6 +281,7 @@ export default {
 			inputDangerPriceBuy:'',
 			hasDangerPriceSell:'',
 			inputDangerPriceSell:'',
+			SearchProduct:'',
         };
     },
 
@@ -286,15 +300,23 @@ export default {
 		}
 
 	},
-
+	watch:{
+		SearchProduct(){
+			if(this.SearchProduct==''){
+				this.GetAllStore()
+			}
+		}
+	},
     methods: {
-		GetAllStore(){
-
-			axios.get(`/api/store`).then((response) => {
+		GetAllStore(page){
+		this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+			axios.get(`/api/store?page=${page}&s=${this.SearchProduct}`).then((response) => {
                         this.FormData = response.data;
+						//console.log(response.data)
                     }).catch((error) => {
                         console.log(error);
                     })
+			});
 		},
 		AddNew(){
 			this.FormShow = true
@@ -314,13 +336,15 @@ export default {
 				// 	price_sell: this.FormProduct.price_sell
 				// });
 
-				//this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+				
 					let formData = new FormData();
 					formData.append('name', this.FormProduct.name);
 					formData.append('amount', this.FormProduct.amount);
 					formData.append('price_buy', this.FormProduct.price_buy);
 					formData.append('price_sell', this.FormProduct.price_sell);
-					// formData.append('file', this.imagesPro);
+					formData.append('file', this.imageProduct);
+					
+				this.$axios.get("/sanctum/csrf-cookie").then((response) => {
 				axios.post("/api/store/add", formData ,{headers:{ "Content-Type": "multipart/form-data"}})
 					.then((response) => {
 						this.GetAllStore();
@@ -333,8 +357,8 @@ export default {
 					})
 					.catch((error) => {
 					console.log(error);
-					});
-			// });
+					})
+			 });
 
 
 
@@ -495,6 +519,15 @@ export default {
 			} 
 
 			
+		},
+		onSeclected(event){
+		this.imageProduct = event.target.files[0];
+			//console.log(this.imageProduct)
+			let reader = new FileReader();
+			reader.readAsDataURL(this.imageProduct)
+			reader.addEventListener("load", function(){
+				this.imagePreview = reader.result;
+			}.bind(this), false)
 		}
         
     },

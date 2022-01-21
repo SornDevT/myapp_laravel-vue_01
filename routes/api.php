@@ -26,10 +26,10 @@ Route::post('register', [UserController::class, 'register']);
 Route::post('logout', [UserController::class, 'logout'])->middleware('auth:sanctum');
 
 
-//Route::group(['prefix' => 'store', 'middleware' => 'auth:sanctum'], function () {
-    Route::get('store/', [StoreController::class, 'index']);
-    Route::post('store/add', [StoreController::class, 'add']);
-    Route::get('store/edit/{id}', [StoreController::class, 'edit']);
-    Route::post('store/update/{id}', [StoreController::class, 'update']);
-    Route::delete('store/delete/{id}', [StoreController::class, 'delete']);
-//});
+Route::group(['prefix' => 'store', 'middleware' => 'auth:sanctum'], function () {
+    Route::get('/', [StoreController::class, 'index']);
+    Route::post('add', [StoreController::class, 'add']);
+    Route::get('edit/{id}', [StoreController::class, 'edit']);
+    Route::post('update/{id}', [StoreController::class, 'update']);
+    Route::delete('delete/{id}', [StoreController::class, 'delete']);
+});

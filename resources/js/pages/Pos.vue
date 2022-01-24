@@ -34,6 +34,24 @@
                         />
                     </div>
                 </div>
+
+                <div class="row" style="height: 67vh; overflow:auto;">
+                        <div class="col-md-3" v-for="list in ProductData.data" :key="list.id">
+                                
+                                <div class="card cursor-poiter" @click="AddToOrder(list.id)">
+                                    <img v-if="list.images" class="card-img-top img-responsive" :src="urlLocaltion+'/assets/images/'+list.images" style=" width:100%; height: 140px; object-fit: cover; object-position: center;"  alt="Card image cap">
+                                    <img v-if="!list.images" class="card-img-top img-responsive" :src="urlLocaltion+'/assets/images/add_images.png'" alt="Card image cap" style=" width:100%; height: 140px; object-fit: cover; object-position: center;">
+
+                                    <div class="card-body text-center">
+                                        <p class="card-text">{{list.name}} </p>
+                                         <p class="card-text text-info"> {{formatPrice(list.price_sell)}} kip</p>
+                                    </div>
+                                </div>
+                        </div>
+                        
+                       
+                </div>
+
             </div>
             <div class="col-md-4">
                 <div class="card">
@@ -69,7 +87,13 @@
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody></tbody>
+                                <tbody>
+                                    <tr v-for="item in ListOrder" :key="item.id">
+                                        <td>{{ item.name }}</td>
+                                        <td>{{ formatPrice(item.price_sell) }} <br> {{item.order_amount}} </td>
+                                        <td>{{ formatPrice(item.price_sell*item.order_amount) }} </td>
+                                    </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
@@ -85,12 +109,58 @@ export default {
     name: "MyappPos",
 
     data() {
-        return {};
+        return {
+            ProductData:[],
+            SearchProduct:'',
+            urlLocaltion: window.location.origin,
+            ListOrder:[],
+        };
     },
 
     mounted() {},
 
-    methods: {},
+    methods: {
+        GetAllStore(page){
+		this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+			axios.get(`/api/store?page=${page}&s=${this.SearchProduct}`).then((response) => {
+                        this.ProductData = response.data;
+						//console.log(response.data)
+                    }).catch((error) => {
+                        console.log(error);
+                    })
+			});
+		},
+        formatPrice(value) {
+      let val = (value / 1).toFixed(0).replace(",", ".");
+      return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+    },
+        AddToOrder(id){
+            let item = this.ProductData.data.find((i)=>i.id==id);
+                if(this.ListOrder.find((i)=>i.id==id)){
+                   // alert('ມີໃນລາຍການ')
+                   let old_order_amount = this.ListOrder.find((i)=>i.id==id).order_amount;
+                   if(item.amount-old_order_amount>0){
+                       this.ListOrder.find((i)=>i.id==id).order_amount = old_order_amount+1
+                   } else {
+                       alert('ສິນຄ້າໝົດ!')
+                   }
+                } else {
+                    if(item.amount>0){
+                        this.ListOrder.push({
+                            id: item.id,
+                            name: item.name,
+                            price_sell: item.price_sell,
+                            order_amount: 1
+                        });
+                    } else {
+                        alert('ບໍ່ມີສິນຄ້າ')
+                    }
+                }
+        }
+    },
+    created(){
+		this.GetAllStore();
+	},
     beforeRouteEnter(to, from, next) {
     if (!window.Laravel.isLoggedin) {
       window.location.href = "/login";

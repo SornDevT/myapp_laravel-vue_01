@@ -18,14 +18,27 @@ class UserController extends Controller
     {
         try {
 
-            $user = new User();
-            $user->name = $request->name;
-            $user->email = $request->email;
-            $user->password = Hash::make($request->password);
-            $user->save();
+            $userCheck = User::where('email',$request->email);
 
-            $success = true;
-            $message = 'ລົງທະບຽນສຳເລັດ!';
+                if($userCheck->count()){
+                    
+                    $success = false;
+                    $message = 'ອີເມວລ໌ນີ້ ໄດ້ຖຶກລົງທະບຽນແລ້ວ!';
+
+                } else{
+
+                    $user = new User();
+                    $user->name = $request->name;
+                    $user->email = $request->email;
+                    $user->password = Hash::make($request->password);
+                    $user->save();
+        
+                    $success = true;
+                    $message = 'ລົງທະບຽນສຳເລັດ!';
+                }
+        
+               
+  
         } catch (\Illuminate\Database\QueryException $ex) {
             $success = false;
             $message = $ex->getMessage();

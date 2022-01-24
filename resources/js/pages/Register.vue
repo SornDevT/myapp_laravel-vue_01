@@ -115,6 +115,7 @@ export default {
                                 if (response.data.success) {
                                     this.$router.push('login') 
                                 } else {
+                                    alert(response.data.message)
                                     this.showError = true;
                                     this.textError = response.data.message;
                                 }

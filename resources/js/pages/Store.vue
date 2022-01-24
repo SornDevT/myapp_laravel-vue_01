@@ -320,6 +320,11 @@ export default {
 		},
 		AddNew(){
 			this.FormShow = true
+			 this.imagePreview = window.location.origin+"/assets/images/add_images.png"
+			 this.FormProduct.name = ''
+			this.FormProduct.amount = ''
+			this.FormProduct.price_buy = ''
+			this.FormProduct.price_sell = ''
 		},
 		Cancel(){
 			this.FormShow = false
@@ -375,6 +380,7 @@ export default {
 					formData.append('amount', this.FormProduct.amount);
 					formData.append('price_buy', this.FormProduct.price_buy);
 					formData.append('price_sell', this.FormProduct.price_sell);
+					formData.append('file', this.imageProduct);
 
 				axios.post(`/api/store/update/${this.FormID}`, formData ,{headers:{ "Content-Type": "multipart/form-data"}})
 					.then((response) => {
@@ -416,6 +422,12 @@ export default {
 						this.FormProduct.amount = response.data.amount
 						this.FormProduct.price_buy = response.data.price_buy
 						this.FormProduct.price_sell = response.data.price_sell
+						//this.imageProduct = response.data.images
+						 if(response.data.images){
+                            this.imagePreview = window.location.origin+"/assets/images/"+response.data.images;
+                        } else {
+                            this.imagePreview = window.location.origin+"/assets/images/add_images.png";
+                        }
                     })
                     .catch((error) => {
                         console.log(error);

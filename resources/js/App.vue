@@ -289,7 +289,7 @@
                         <li>
                             <router-link to="/pos" class=" waves-effect waves-dark" href="javascript:void(0)" aria-expanded="false">
                                 <i class="icon-basket-loaded"></i>
-                                <span class="hide-menu"> <strong>ຮ້ານຄ້າ Pos</strong> 
+                                <span class="hide-menu"> ຮ້ານຄ້າ Pos
                                 </span>
                             </router-link>
                         </li>
@@ -374,6 +374,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
+<style>
+    .cursor-poiter{
+        cursor: pointer;
+    }
 </style>

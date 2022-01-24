@@ -15,7 +15,7 @@ class StoreController extends Controller
         $search = \Request::get('s');
         $store = Store::orderBy('created_at', 'desc')
         ->where("name","LIKE","%{$search}%")
-        ->paginate(5)
+        ->paginate(15)
         ->toArray();
 
         return array_reverse($store);
@@ -82,13 +82,47 @@ class StoreController extends Controller
     public function update($id, Request $request){
 
         $store = Store::find($id);
-        $store->update([
+
+            if($request->file('file')){
+                
+                $upload_path = 'assets/images';
+
+                /// ທຳການລຶບໄຟລ໌ເກົ່າ
+                if($store->images!='' && $store->images!= null){
+                    if(file_exists('assets/images/'.$store->images)){
+                    unlink('assets/images/'.$store->images);
+                    }
+                }
+                
+
+                $generated_new_name = time() . '.' . $request->file->getClientOriginalExtension();
+                $image = $request->file('file');
+                $img = Image::make($image->getRealPath());
+                $img->resize(800, null, function ($constraint) {
+                    $constraint->aspectRatio();
+                });
+                
+                $img->save($upload_path.'/'.$generated_new_name);
+
+                $store->update([
                     'name' => $request->name,
-                    //'images' => $generated_new_name,
+                    'images' => $generated_new_name,
                     'amount' => $request->amount,
                     'price_buy' => $request->price_buy,
                     'price_sell' => $request->price_sell
                 ]);
+
+            } else { 
+
+                $store = Store::find($id);
+                $store->update([
+                            'name' => $request->name,
+                            'amount' => $request->amount,
+                            'price_buy' => $request->price_buy,
+                            'price_sell' => $request->price_sell
+                        ]);
+
+            }
 
     }
 

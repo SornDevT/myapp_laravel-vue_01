@@ -18,63 +18,48 @@
         <div class="row">
             <div class="card">
                 <div class="card-body">
-                                <h4 class="card-title">Responsive Table </h4>
-                                <h6 class="card-subtitle">Create responsive tables by wrapping any <code>.table</code> in <code>.table-responsive </code></h6>
+                                <div class="d-flex justify-content-between mb-2">
+                                        <h4 class="card-title">ລາຍລະອຽດ ການເຄື່ອນໄຫວ</h4>
+                                        <div>
+                                            <div class="btn-group me-2" role="group" aria-label="Basic example"> 
+                                                <button type="button" class="btn btn-secondary" @click="monthtype = 'm'"> <i class="mdi mdi-menu-right" v-if="monthtype == 'm'"></i> ເດືອນ</button>
+                                                <button type="button" class="btn btn-secondary" @click="monthtype = 'y'"> <i class="mdi mdi-menu-right" v-if="monthtype == 'y'"></i> ປີ</button>
+                                            </div>
+                                            <input type="date" style="width: 180px;" v-model="dmy" class="form-control me-2">
+                                            <button class="btn btn-success text-white me-2" @click="GetAllTran()" >
+                                                <i class="mdi mdi-view-list"></i> ສະແດງການເຄື່ອນໄຫວ
+                                            </button>
+                                        </div>
+                                </div>
+                                
+                                
                                 <div class="table-responsive">
-                                    <table class="table">
+                                    <table class="table border">
                                         <thead>
                                             <tr>
-                                                <th>Invoice</th>
-                                                <th>User</th>
-                                                <th>Date</th>
-                                                <th>Amount</th>
-                                                <th>Status</th>
-                                                <th>Country</th>
+                                                <th width="120" class="text-center">ວັນທີ່</th>
+                                                <th width="120" class="text-center">ເລກທີ່ທຸລະກຳ</th>
+                                                <th width="120">ປະເພດທຸລະກຳ</th>
+                                                <th>ລາຍລະອຽດ</th>
+                                                <th width="150" class="text-center">ມູນຄ່າ</th>
                                             </tr>
                                         </thead>
                                         <tbody>
-                                            <tr>
-                                                <td><a href="javascript:void(0)">Order #26589</a></td>
-                                                <td>Herman Beck</td>
-                                                <td><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 16, 2017</span> </td>
-                                                <td>$45.00</td>
-                                                <td>
-                                                    <div class="label label-table label-success">Paid</div>
+                                            <tr v-for="trn in Transection.data" :key="trn.index">
+                                                <td class="text-center">{{ date(trn.created_at) }}</td>
+                                                <td class="text-center">{{ trn.tran_id }}</td>
+                                                <td class="text-center">{{ trn.tran_type }} </td>
+                                                <td>{{ trn.tran_detail }}</td>
+                                                <td class="text-end">
+                                                    {{ formatPrice(trn.price) }}
                                                 </td>
-                                                <td>EN</td>
                                             </tr>
-                                            <tr>
-                                                <td><a href="javascript:void(0)">Order #58746</a></td>
-                                                <td>Mary Adams</td>
-                                                <td><span class="text-muted"><i class="fa fa-clock-o"></i> Oct 12, 2017</span> </td>
-                                                <td>$245.30</td>
-                                                <td>
-                                                    <div class="label label-table label-danger">Shipped</div>
-                                                </td>
-                                                <td>CN</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="javascript:void(0)">Order #98458</a></td>
-                                                <td>Caleb Richards</td>
-                                                <td><span class="text-muted"><i class="fa fa-clock-o"></i> May 18, 2017</span> </td>
-                                                <td>$38.00</td>
-                                                <td>
-                                                    <div class="label label-table label-info">Shipped</div>
-                                                </td>
-                                                <td>AU</td>
-                                            </tr>
-                                            <tr>
-                                                <td><a href="javascript:void(0)">Order #32658</a></td>
-                                                <td>June Lane</td>
-                                                <td><span class="text-muted"><i class="fa fa-clock-o"></i> Apr 28, 2017</span> </td>
-                                                <td>$77.99</td>
-                                                <td>
-                                                    <div class="label label-table label-success">Paid</div>
-                                                </td>
-                                                <td>FR</td>
-                                            </tr>
+                                      
+                                          
+                                          
                                         </tbody>
                                     </table>
+                                    <pagination :pagination="Transection" @paginate="GetAllTran($event)" :offset="4" />
                                 </div>
                             </div>
 
@@ -86,12 +71,19 @@
 </template>
 
 <script>
+
+    import moment from "moment";
+
 export default {
     name: 'MyappTransection',
-
+    components:{
+        moment
+    },
     data() {
         return {
-            
+            Transection:[],
+            monthtype:"y",
+            dmy:'',
         };
     },
 
@@ -100,7 +92,33 @@ export default {
     },
 
     methods: {
-        
+        date(value){
+            return moment(value).format("DD/MM/YYYY")
+        },
+        GetAllTran(page){
+            this.$axios.get("/sanctum/csrf-cookie").then((response) => {
+                axios.post(`/api/transection?page=${page}`,{
+                  monthtype:this.monthtype,
+                  dmy:this.dmy
+                }).then((response) => {
+                       // if (response.data.success) {
+                        this.Transection = response.data;
+                      //  } else {
+                       ///      console.log(response.data.message);
+                       // }
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+                });
+        },
+        formatPrice(value) {
+			let val = (value / 1).toFixed(0).replace(",", ".");
+			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		},
+    },
+    created(){
+        this.GetAllTran()
     },
     beforeRouteEnter(to, from, next) {
     if (!window.Laravel.isLoggedin) {

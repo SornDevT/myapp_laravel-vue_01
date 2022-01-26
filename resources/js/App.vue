@@ -375,7 +375,7 @@ export default {
 </script>
 
 <style>
-    .cursor-poiter{
+    .cursor-pointer{
         cursor: pointer;
     }
 </style>

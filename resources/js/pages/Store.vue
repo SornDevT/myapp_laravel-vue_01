@@ -311,8 +311,12 @@ export default {
 		GetAllStore(page){
 		this.$axios.get("/sanctum/csrf-cookie").then((response) => {
 			axios.get(`/api/store?page=${page}&s=${this.SearchProduct}`).then((response) => {
+					//	if (response.data.success) {
                         this.FormData = response.data;
-						//console.log(response.data)
+					//	}else{
+					//		 console.log(response.data.message);
+					//	}
+						//)
                     }).catch((error) => {
                         console.log(error);
                     })

@@ -44,6 +44,7 @@ class TransectionController extends Controller
     public function add(Request $request){
         try {
             foreach($request->listorder as $item){
+                
                 $tran = Transection::all()->sortByDesc('id')->take(1)->toArray();
                 $number = 1;
                 foreach($tran as $new)

@@ -5,6 +5,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\API\StoreController;
 use App\Http\Controllers\API\UserController;
 use App\Http\Controllers\API\TransectionController;
+use App\Http\Controllers\API\ReportController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -41,4 +43,9 @@ Route::group(['prefix' => 'transection', 'middleware' => 'auth:sanctum'], functi
     Route::get('edit/{id}', [TransectionController::class, 'edit']);
     Route::post('update/{id}', [TransectionController::class, 'update']);
     Route::delete('delete/{id}', [TransectionController::class, 'delete']);
+});
+
+Route::group(['prefix' => 'report', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('/', [ReportController::class, 'index']);
+   // Route::post('/dashgrap', [ReportController::class, 'DashGrap']);
 });

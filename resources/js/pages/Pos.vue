@@ -166,7 +166,7 @@
                                                         </div>
                                                     </div>
                                                     <div class="row justify-content-center d-flex mt-2 text-center">
-                                                        <button type="button" class="btn btn-success" @click="ConfirmPay"  style="width:180px;" :disabled="CheckCPay"><i class="fas fa-coins"></i> ບືນຍັນຊຳລ່ະເງິນ </button>
+                                                        <button type="button" class="btn btn-success" @click="ConfirmPay"  style="width:180px;" :disabled="CheckCPay"><i class="fas fa-coins"></i> ຍືນຍັນຊຳລ່ະເງິນ </button>
                                                     </div>
 
                                             </div>

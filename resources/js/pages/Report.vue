@@ -52,10 +52,10 @@
                         <div class="card">
                             <div class="d-flex flex-row">
                                 <div class="p-10 bg-info">
-                                    <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
+                                    <h3 class="text-white box m-b-0"><i class="ti-stats-up"></i></h3></div>
                                 <div class="align-self-center m-l-20">
-                                    <h3 class="m-b-0 text-info">$18090</h3>
-                                    <h5 class="text-muted m-b-0">Income</h5></div>
+                                    <h3 class="m-b-0 text-info">{{ formatPrice(sum_income) }} ກີບ</h3>
+                                    <h5 class="text-muted m-b-0">ລາຍຮັບ</h5></div>
                             </div>
                         </div>
                     </div>
@@ -65,10 +65,10 @@
                         <div class="card">
                             <div class="d-flex flex-row">
                                 <div class="p-10 bg-success">
-                                    <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
+                                    <h3 class="text-white box m-b-0"><i class="ti-stats-down"></i></h3></div>
                                 <div class="align-self-center m-l-20">
-                                    <h3 class="m-b-0 text-success">$18090</h3>
-                                    <h5 class="text-muted m-b-0">Income</h5></div>
+                                    <h3 class="m-b-0 text-success">{{ formatPrice(sum_expense) }} ກີບ</h3>
+                                    <h5 class="text-muted m-b-0">ລາຍຈ່າຍ</h5></div>
                             </div>
                         </div>
                     </div>
@@ -78,10 +78,10 @@
                         <div class="card">
                             <div class="d-flex flex-row">
                                 <div class="p-10 bg-inverse">
-                                    <h3 class="text-white box m-b-0"><i class="ti-wallet"></i></h3></div>
+                                    <h3 class="text-white box m-b-0"><i class="ti-pie-chart"></i></h3></div>
                                 <div class="align-self-center m-l-20">
-                                    <h3 class="m-b-0">$18090</h3>
-                                    <h5 class="text-muted m-b-0">Income</h5></div>
+                                    <h3 class="m-b-0"> {{formatPrice(sum_profit)}} </h3>
+                                    <h5 class="text-muted m-b-0">ກຳໄລ</h5></div>
                             </div>
                         </div>
                     </div>
@@ -153,8 +153,25 @@ export default {
     mounted() {
         
     },
+    
+    computed:{
 
+      sum_income(){
+        return this.data_income.reduce((num, item) => num + item.price,0);
+      },
+      sum_expense(){
+        return this.data_expense.reduce((num, item) => num + item.price,0);
+      },
+      sum_profit(){
+        return this.sum_income-this.sum_expense
+      }
+
+    },
     methods: {
+      formatPrice(value) {
+			let val = (value / 1).toFixed(0).replace(",", ".");
+			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+		},
         CreateReport(){
 
             this.$axios.get("/sanctum/csrf-cookie").then((response) => {
@@ -262,7 +279,9 @@ export default {
                 }
     },
     Getlastday(y, m) {
-      return new Date(y, m + 1, 0).getDate();
+      let dd = new Date(y, m , 0).getDate();
+      //console.log(dd)
+      return dd
     },
     Getday(value) {
       return moment(value).format("DD");

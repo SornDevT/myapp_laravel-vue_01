@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Transection;
+use App\Models\Store;
 
 class ReportController extends Controller
 {
@@ -28,6 +29,20 @@ class ReportController extends Controller
         $response = [
             'income'=> $income,
             'expense'=> $expense
+        ];
+        return response()->json($response);
+    }
+
+    public function DashGrap(Request $request){
+
+            $income = Transection::where('tran_type', 'income')->get();
+            $expense = Transection::where('tran_type', 'expense')->get();
+            $store = Store::where('amount','!=', '0')->get();
+
+        $response = [
+            'income'=> $income,
+            'expense'=> $expense,
+            'store'=> $store
         ];
         return response()->json($response);
     }
